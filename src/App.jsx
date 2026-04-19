@@ -12,21 +12,27 @@ function App() {
     else {
       if (text.trim() == "") return
       setOutput("")
-      const response = await axios.post("http://localhost:3001/chat", {
-        userPrompt: text,
-      })
+      const response = await axios.post(
+        "https://chatassis-backend.onrender.com/chat",
+        {
+          userPrompt: text,
+        },
+      )
       setOutput(response.data?.message)
       //   console.log(response.data?.message)
     }
   }
 
-  const handleEnterBtn = async() => {
+  const handleEnterBtn = async () => {
     if (text.trim() == "") return
-      setOutput("")
-      const response = await axios.post("http://localhost:3001/chat", {
+    setOutput("")
+    const response = await axios.post(
+      "https://chatassis-backend.onrender.com/chat",
+      {
         userPrompt: text,
-      })
-      setOutput(response.data?.message)
+      },
+    )
+    setOutput(response.data?.message)
   }
 
   return (
@@ -50,7 +56,13 @@ function App() {
                 className="input w-[calc(570px)] outline-none border-none"
               />
               <div className="flex flex-col justify-center ml-1">
-                <button onClick={handleEnterBtn} className="btn border-gray-300 rounded-[7px] outline-none"> Enter</button>
+                <button
+                  onClick={handleEnterBtn}
+                  className="btn border-gray-300 rounded-[7px] outline-none"
+                >
+                  {" "}
+                  Enter
+                </button>
               </div>
             </div>
           </div>
