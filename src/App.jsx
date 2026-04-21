@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import axios from "axios"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
@@ -8,6 +8,7 @@ import { Shimmer } from "../utility/Shimmer"
 function App() {
   const [text, setText] = useState("")
   const [output, setOutput] = useState(" ")
+  const [userId, setUserId] = useState("")
 
   const handleKey = async (e) => {
     if (e.key != "Enter") return
@@ -16,6 +17,7 @@ function App() {
       setOutput("")
       const response = await axios.post(`${BASE_URL}/chat`, {
         userPrompt: text,
+        userId: userId,
       })
       setOutput(response.data?.message)
       //   console.log(response.data?.message)
@@ -27,9 +29,19 @@ function App() {
     setOutput("")
     const response = await axios.post(`${BASE_URL}/chat`, {
       userPrompt: text,
+      userId: userId,
     })
     setOutput(response.data?.message)
   }
+
+  useEffect(() => {
+    let id = userId
+
+    if (!id) {
+      id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6)
+      setUserId(id)
+    }
+  }, [])
 
   return (
     <>
@@ -41,9 +53,7 @@ function App() {
               {output == "" ? (
                 <Shimmer />
               ) : (
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                >
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {output}
                 </ReactMarkdown>
               )}
