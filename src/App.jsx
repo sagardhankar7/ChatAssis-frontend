@@ -49,7 +49,7 @@ function App() {
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content">
           <div className="w-456">
-            <h1 className="text-5xl font-bold">Chat Assist</h1>
+            <h1 className="text-5xl font-bold text-center">Chat Assist</h1>
             <div className="py-6 h-120 overflow-y-auto whitespace-pre-line border rounded p-2 my-3 border-gray-200">
               {output == "" ? (
                 <Shimmer />
