@@ -4,6 +4,7 @@ import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
 import { BASE_URL } from "../utility/Constants"
 import { Shimmer } from "../utility/Shimmer"
+import "./App.css"
 
 function App() {
   const [text, setText] = useState("")
@@ -46,14 +47,21 @@ function App() {
   return (
     <>
       <div className="hero bg-base-200 min-h-screen">
-        <div className="hero-content text-center">
+        <div className="hero-content">
           <div className="w-456">
             <h1 className="text-5xl font-bold">Chat Assist</h1>
             <div className="py-6 h-120 overflow-y-auto whitespace-pre-line border rounded p-2 my-3 border-gray-200">
               {output == "" ? (
                 <Shimmer />
               ) : (
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    table: ({ node, ...props }) => (
+                      <table className="markdown-table" {...props} />
+                    ),
+                  }}
+                >
                   {output}
                 </ReactMarkdown>
               )}

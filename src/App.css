@@ -1,2 +1,17 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+
+.markdown-table {
+  @apply w-full border-collapse bg-gray-50;   /* Tailwind utilities */
+}
+.markdown-table th,
+.markdown-table td {
+  @apply border border-gray-300 p-2 text-left;
+}
+.markdown-table thead {
+  @apply bg-gray-200;
+}
+.markdown-table tbody tr:nth-child(even) {
+  @apply bg-gray-100;
+}
