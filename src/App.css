@@ -1,9 +1,19 @@
 @import "tailwindcss";
 @plugin "daisyui";
 
+@font-face {
+  font-family: "Driftune";
+  src: url("../utility/font/Driftune-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+* {
+  font-family: "Driftune" !important;
+  letter-spacing: 0.1rem !important;
+}
 
 .markdown-table {
-  @apply w-full border-collapse bg-gray-50;   /* Tailwind utilities */
+  @apply w-full border-collapse bg-gray-50; /* Tailwind utilities */
 }
 .markdown-table th,
 .markdown-table td {
