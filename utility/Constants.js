@@ -1,2 +1,1 @@
-export const BASE_URL = "https://chatassis-backend.onrender.com"
-// "http://localhost:3001"
+export const BASE_URL = "https://chat-assis-backend.vercel.app" //"http://localhost:3001" //"https://chatassis-backend.onrender.com"
