@@ -10,28 +10,38 @@ function App() {
   const [text, setText] = useState("")
   const [output, setOutput] = useState(" ")
   const [userId, setUserId] = useState("")
+  const [file, setFile] = useState(null)
 
   const handleKey = async (e) => {
     if (e.key != "Enter") return
     else {
-      if (text.trim() == "") return
-      setOutput("")
-      const response = await axios.post(`${BASE_URL}/chat`, {
-        userPrompt: text,
-        userId: userId,
-      })
-      setOutput(response.data?.message)
-      //   console.log(response.data?.message)
+      await sendRequest()
     }
   }
 
   const handleEnterBtn = async () => {
-    if (text.trim() == "") return
+    await sendRequest()
+  }
+
+  const sendRequest = async () => {
+    if (text.trim() === "" && !file) return
+
     setOutput("")
-    const response = await axios.post(`${BASE_URL}/chat`, {
-      userPrompt: text,
-      userId: userId,
+
+    const formData = new FormData()
+    formData.append("userPrompt", text)
+    formData.append("userId", userId)
+
+    if (file) {
+      formData.append("file", file)
+    }
+
+    const response = await axios.post(`${BASE_URL}/chat`, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
     })
+
     setOutput(response.data?.message)
   }
 
@@ -62,7 +72,8 @@ function App() {
                     ),
                   }}
                 >
-                  {output}
+                  {/* {output} */}
+                  {typeof output === "string" ? output : JSON.stringify(output)}
                 </ReactMarkdown>
               )}
             </div>
@@ -75,12 +86,16 @@ function App() {
                 placeholder="Ask Anything"
                 className="input w-[calc(570px)] outline-none border-none"
               />
-              <div className="flex flex-col justify-center ml-1">
+              <div className="flex justify-center ml-1">
+                <input
+                  type="file"
+                  onChange={(e) => setFile(e.target.files[0])}
+                  className="file-input file-input-bordered ml-2"
+                />
                 <button
                   onClick={handleEnterBtn}
                   className="btn border-gray-300 rounded-[7px] outline-none"
                 >
-                  {" "}
                   Enter
                 </button>
               </div>
