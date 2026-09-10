@@ -74,11 +74,15 @@ function App() {
 
   return (
     <>
-      <div className="hero bg-base-200 min-h-screen">
-        <div className="hero-content">
-          <div className="w-456">
+      <div className="">
+        <div className="">
+          <div className={"grid h-screen grid-rows-[auto_minmax(0,1fr)_auto]"}>
             <LogoBar/>
+
+              {/*<div className={"absolute"}></div>*/}
             <div className="overflow-y-auto whitespace-pre-line  rounded-lg p-2 my-3 border-gray-800">
+              <div className={"absolute z-10 h-[50px] bg-blue-500"}></div>
+              <div>
               {chats.map((chat)=> {
                 if(chat.position=="left") {
                   return (<OutputChat key={chat.id} chat={chat}/>)
@@ -87,7 +91,9 @@ function App() {
                   return (<InputChat key={chat.id} chat={chat}/>)
                 }
               })}
+              </div>
             </div>
+
             {/*Input Area*/}
             <InputBox handleEnterBtn={handleEnterBtn} handleKey={handleKey} setText={setText} text={text} setFile={setFile} />
           </div>
