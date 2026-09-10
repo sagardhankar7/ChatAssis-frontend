@@ -1,16 +1,21 @@
 import { useEffect, useState } from "react"
 import axios from "axios"
-import ReactMarkdown from "react-markdown"
-import remarkGfm from "remark-gfm"
 import { BASE_URL } from "../utility/Constants"
 import { Shimmer } from "../utility/Shimmer"
 import "./App.css"
+import { v4 as uuid } from 'uuid';
+import OutputChat from "./components/OutputChat.jsx";
+import InputChat from "./components/InputChat.jsx";
+import InputBox from "./components/InputBox.jsx";
+import LogoBar from "./components/LogoBar.jsx";
+
 
 function App() {
   const [text, setText] = useState("")
   const [output, setOutput] = useState(" ")
   const [userId, setUserId] = useState("")
   const [file, setFile] = useState(null)
+  const [chats, setChats] = useState([])
 
   const handleKey = async (e) => {
     if (e.key != "Enter") return
@@ -28,6 +33,13 @@ function App() {
 
     setOutput("")
 
+    const inputObj = {}
+    inputObj.message = text
+    inputObj.id = uuid()
+    inputObj.position = "right"
+    // const arr2 = [...chats, inputObj]
+    // setChats(arr2)
+
     const formData = new FormData()
     formData.append("userPrompt", text)
     formData.append("userId", userId)
@@ -43,6 +55,12 @@ function App() {
     })
 
     setOutput(response.data?.message)
+    const obj = {}
+    obj.message = response.data?.message
+    obj.id = uuid()
+    obj.position = "left"
+    const arr= [...chats, inputObj, obj]
+    setChats(arr)
   }
 
   useEffect(() => {
@@ -59,52 +77,36 @@ function App() {
       <div className="hero bg-base-200 min-h-screen">
         <div className="hero-content">
           <div className="w-456">
-            <h1 className="text-5xl font-bold text-center">Chat Assist</h1>
-            <div className="py-6 h-120 overflow-y-auto whitespace-pre-line border rounded p-2 my-3 border-gray-200">
-              {output == "" ? (
-                <Shimmer />
-              ) : (
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={{
-                    table: ({ node, ...props }) => (
-                      <table className="markdown-table" {...props} />
-                    ),
-                  }}
-                >
-                  {/* {output} */}
-                  {typeof output === "string" ? output : JSON.stringify(output)}
-                </ReactMarkdown>
-              )}
+            <LogoBar/>
+            <div className="overflow-y-auto whitespace-pre-line  rounded-lg p-2 my-3 border-gray-800">
+              {chats.map((chat)=> {
+                if(chat.position=="left") {
+                  return (<OutputChat key={chat.id} chat={chat}/>)
+                }
+                else {
+                  return (<InputChat key={chat.id} chat={chat}/>)
+                }
+              })}
             </div>
-            <div className="flex justify-center">
-              <input
-                onKeyUp={handleKey}
-                type="text"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-                placeholder="Ask Anything"
-                className="input w-[calc(570px)] outline-none border-none"
-              />
-              <div className="flex justify-center ml-1">
-                <input
-                  type="file"
-                  onChange={(e) => setFile(e.target.files[0])}
-                  className="file-input file-input-bordered ml-2"
-                />
-                <button
-                  onClick={handleEnterBtn}
-                  className="btn border-gray-300 rounded-[7px] outline-none"
-                >
-                  Enter
-                </button>
-              </div>
-            </div>
+            {/*Input Area*/}
+            <InputBox handleEnterBtn={handleEnterBtn} handleKey={handleKey} setText={setText} text={text} setFile={setFile} />
           </div>
         </div>
       </div>
     </>
   )
 }
+
+// <ReactMarkdown
+//                   remarkPlugins={[remarkGfm]}
+//                   components={{
+//                     table: ({ node, ...props }) => (
+//                       <table className="markdown-table" {...props} />
+//                     ),
+//                   }}
+//                 >
+//                   {/* {output} */}
+//                   {typeof output === "string" ? output : JSON.stringify(output)}
+//                 </ReactMarkdown>
 
 export default App
