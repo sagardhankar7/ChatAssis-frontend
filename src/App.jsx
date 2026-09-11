@@ -8,111 +8,16 @@ import OutputChat from "./components/OutputChat.jsx";
 import InputChat from "./components/InputChat.jsx";
 import InputBox from "./components/InputBox.jsx";
 import LogoBar from "./components/LogoBar.jsx";
+import {BrowserRouter , Routes, Route} from "react-router-dom"
+import Chat from "./components/Chat.jsx";
 
-
-function App() {
-  const [text, setText] = useState("")
-  const [output, setOutput] = useState(" ")
-  const [userId, setUserId] = useState("")
-  const [file, setFile] = useState(null)
-  const [chats, setChats] = useState([])
-
-  const handleKey = async (e) => {
-    if (e.key != "Enter") return
-    else {
-      await sendRequest()
-    }
-  }
-
-  const handleEnterBtn = async () => {
-    await sendRequest()
-  }
-
-  const sendRequest = async () => {
-    if (text.trim() === "" && !file) return
-
-    setOutput("")
-
-    const inputObj = {}
-    inputObj.message = text
-    inputObj.id = uuid()
-    inputObj.position = "right"
-    // const arr2 = [...chats, inputObj]
-    // setChats(arr2)
-
-    const formData = new FormData()
-    formData.append("userPrompt", text)
-    formData.append("userId", userId)
-
-    if (file) {
-      formData.append("file", file)
-    }
-
-    const response = await axios.post(`${BASE_URL}/chat`, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    })
-
-    setOutput(response.data?.message)
-    const obj = {}
-    obj.message = response.data?.message
-    obj.id = uuid()
-    obj.position = "left"
-    const arr= [...chats, inputObj, obj]
-    setChats(arr)
-  }
-
-  useEffect(() => {
-    let id = userId
-
-    if (!id) {
-      id = Date.now().toString(36) + Math.random().toString(36).slice(2, 6)
-      setUserId(id)
-    }
-  }, [])
-
+export default function App() {
   return (
-    <>
-      <div className="">
-        <div className="">
-          <div className={"grid h-screen grid-rows-[auto_minmax(0,1fr)_auto]"}>
-            <LogoBar/>
-
-              {/*<div className={"absolute"}></div>*/}
-            <div className="overflow-y-auto whitespace-pre-line  rounded-lg p-2 my-3 border-gray-800">
-              <div className={"absolute z-10 h-[50px] bg-blue-500"}></div>
-              <div>
-              {chats.map((chat)=> {
-                if(chat.position=="left") {
-                  return (<OutputChat key={chat.id} chat={chat}/>)
-                }
-                else {
-                  return (<InputChat key={chat.id} chat={chat}/>)
-                }
-              })}
-              </div>
-            </div>
-
-            {/*Input Area*/}
-            <InputBox handleEnterBtn={handleEnterBtn} handleKey={handleKey} setText={setText} text={text} setFile={setFile} />
-          </div>
-        </div>
-      </div>
-    </>
+    <BrowserRouter>
+      <Routes>
+          <Route path={`/`} element={<Chat/>}></Route>
+        <Route path={`/chat/:chatid`} element={<Chat/>}></Route>
+      </Routes>
+    </BrowserRouter>
   )
 }
-
-// <ReactMarkdown
-//                   remarkPlugins={[remarkGfm]}
-//                   components={{
-//                     table: ({ node, ...props }) => (
-//                       <table className="markdown-table" {...props} />
-//                     ),
-//                   }}
-//                 >
-//                   {/* {output} */}
-//                   {typeof output === "string" ? output : JSON.stringify(output)}
-//                 </ReactMarkdown>
-
-export default App
