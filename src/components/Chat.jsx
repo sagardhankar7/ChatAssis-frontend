@@ -8,6 +8,7 @@ import InputChat from "./InputChat.jsx";
 import InputBox from "./InputBox.jsx";
 import {useParams} from "react-router-dom";
 import Content from "./Content.jsx";
+import LoadingSpinner from "./LoadingSpinner.jsx";
 
 export default function () {
     const [text, setText] = useState("")
@@ -17,7 +18,7 @@ export default function () {
     const [chats, setChats] = useState([])
     const [historyLinks, setHistoryLinks] = useState([])
     const [routeTitleMap, setRouteTitleMap] = useState({})
-
+    const [showLoader, setShowLoader] = useState(false)
 
     const {chatid} = useParams()
 
@@ -34,6 +35,8 @@ export default function () {
 
     const sendRequest = async () => {
         if (text.trim() === "" && !file) return
+
+        setShowLoader(true)
 
         setOutput("")
 
@@ -59,7 +62,7 @@ export default function () {
                 "Content-Type": "multipart/form-data",
             },
         })
-
+        setShowLoader(false)
         setOutput(response.data?.message)
         const obj = {}
         obj.message = response.data?.message
@@ -113,6 +116,7 @@ export default function () {
         <>
             <div className="">
                 <div className="">
+                    {showLoader && <LoadingSpinner/>}
                     <div className={"grid h-screen grid-rows-[auto_minmax(0,1fr)_auto]"}>
                         <LogoBar history={historyLinks} setHistory={setHistoryLinks}/>
 
