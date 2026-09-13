@@ -26,11 +26,20 @@ export default function () {
         if (e.key != "Enter") return
         else {
             await sendRequest()
+            if(file) {
+                // inputFileRef.current.value = ""
+                setFile(null)
+            }
         }
     }
 
-    const handleEnterBtn = async () => {
+    const handleEnterBtn = async (inputFileRef) => {
         await sendRequest()
+        if(file) {
+            inputFileRef.current.value = ""
+            setFile(null)
+        }
+
     }
 
     const sendRequest = async () => {
@@ -41,6 +50,7 @@ export default function () {
         setOutput("")
 
         const inputObj = {}
+        // if(file) setText(text+"\n\n" + file.name)
         inputObj.message = text
         inputObj.id = uuid()
         inputObj.position = "right"
@@ -48,7 +58,7 @@ export default function () {
         // setChats(arr2)
 
         const formData = new FormData()
-        formData.append("userPrompt", text)
+        formData.append("userPrompt", JSON.stringify(inputObj))
         formData.append("userId", userId)
         formData.append("currentChatId", chatid)
 
@@ -63,10 +73,12 @@ export default function () {
             },
         })
         setShowLoader(false)
+        setText("")
+
         setOutput(response.data?.message)
         const obj = {}
         obj.message = response.data?.message
-        obj.id = uuid()
+        obj.id = response.data?.id
         obj.position = "left"
         const arr= [...chats, inputObj, obj]
         setChats(arr)
@@ -87,6 +99,8 @@ export default function () {
         }
 
         const formData = new FormData()
+        const userPrompt = {message: ""}
+        formData.append("userPrompt", JSON.stringify(userPrompt))
         formData.append("isHistory", true)
         formData.append("userId", id)
         formData.append("currentChatId", chatid)

@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import axios from "axios";
 import {BASE_URL} from "../../utility/Constants.js";
 
-export default function ({ historyLinks,routeTitleMap, chats, setChats, userId}) {
+export default function ({ historyLinks=[],routeTitleMap={}, chats=[], setChats, userId}) {
 
     async function handleHistoryClick(chatid) {
         const formData = new FormData()
@@ -22,9 +22,6 @@ export default function ({ historyLinks,routeTitleMap, chats, setChats, userId})
         setChats(response.data?.chatArr)
     }
 
-    function textUnder10Char(text) {
-        return text.slice(0,10)
-    }
 
     return (<div className="overflow-y-auto whitespace-pre-line  rounded-lg p-2 my-3 border-gray-800">
         <div className={"absolute z-10 h-[50px] bg-blue-500"}></div>
