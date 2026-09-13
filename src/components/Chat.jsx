@@ -85,6 +85,8 @@ export default function () {
     }
 
     useEffect(() => {
+        if (!chatid) return;
+
         let id = userId
         const localStorage_user_id = localStorage.getItem("chatAssis_user_id")
         if(localStorage_user_id) {
@@ -98,20 +100,26 @@ export default function () {
             localStorage.setItem("chatAssis_user_id", id)
         }
 
-        const formData = new FormData()
-        const userPrompt = {message: ""}
-        formData.append("userPrompt", JSON.stringify(userPrompt))
-        formData.append("isHistory", true)
-        formData.append("userId", id)
-        formData.append("currentChatId", chatid)
+
 
         async function run() {
+            const formData = new FormData()
+            const userPrompt = {message: ""}
+            formData.append("userPrompt", JSON.stringify(userPrompt))
+            formData.append("isHistory", true)
+            formData.append("userId", id)
+            formData.append("currentChatId", chatid)
+
+            console.log("Sending:", [...formData.entries()]);
+
             console.log("fetch request run")
-            const response = await axios.post(`${BASE_URL}/chat/${chatid}`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-            })
+            const response = await axios.post(`${BASE_URL}/chat/${chatid}`, formData,
+                // {
+                // headers: {
+                //     "Content-Type": "multipart/form-data",
+                // },
+            // }
+            )
             setChats(response.data?.chatArr)
             setHistoryLinks(response.data?.historyLinks ? response.data?.historyLinks : [])
             console.log(response.data?.routeTitleMap)

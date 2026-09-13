@@ -8,6 +8,7 @@ export default function ({ historyLinks=[],routeTitleMap={}, chats=[], setChats,
 
     async function handleHistoryClick(chatid) {
         const formData = new FormData()
+        formData.append("userPrompt", JSON.stringify({message: ''}))
         formData.append("isHistory", true)
         formData.append("userId", userId)
         formData.append("history", historyLinks)
