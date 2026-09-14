@@ -4,11 +4,11 @@ import {Link} from "react-router-dom";
 import axios from "axios";
 import {BASE_URL} from "../../utility/Constants.js";
 
-export default function ({ historyLinks=[],routeTitleMap={}, chats=[], setChats, userId}) {
+export default function ({ historyLinks,routeTitleMap, chats, setChats, userId}) {
 
     async function handleHistoryClick(chatid) {
         const formData = new FormData()
-        formData.append("userPrompt", JSON.stringify({message: ''}))
+        // formData.append("userPrompt", JSON.stringify({message: ''}))
         formData.append("isHistory", true)
         formData.append("userId", userId)
         formData.append("history", historyLinks)

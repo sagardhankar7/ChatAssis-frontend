@@ -85,7 +85,7 @@ export default function () {
     }
 
     useEffect(() => {
-        if (!chatid) return;
+        // if (!chatid) return;
 
         let id = userId
         const localStorage_user_id = localStorage.getItem("chatAssis_user_id")
